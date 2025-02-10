@@ -1,43 +1,44 @@
 import { Router, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
+import { CommonResponse } from '../responses/common';
+import { ErrorResponse } from '../responses/error';
+import { AuthRepository } from '../repositories/auth';
+import { CommonService } from '../services/common-service';
+import { UserRepository } from '../repositories/user';
+import { authenticate } from '../middleware/auth';
 
 const authRouter = Router();
-const users: { [key: string]: { password: string } } = {}; 
-const SECRET_KEY = 'your_secret_key'; 
 
-authRouter.post('/register', async (req: Request, res: Response) => {
-    const { username, password } = req.body;
-
-    if (users[username]) {
-        return res.status(400).json({ message: 'User already exists!' });
+authRouter.post('/login', async (req: Request, res: Response):Promise<any> => {
+    try {
+        const { input } = req.body;
+        const user = await AuthRepository.login(input);
+        return new CommonResponse(user);
+    } catch (e) {
+        const err = e as Error;
+        return new ErrorResponse(err);
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    
-    users[username] = { password: hashedPassword };
-    
-    res.status(201).json({ message: 'User registered successfully!' });
 });
 
-authRouter.post('/login', async (req: Request, res: Response) => {
-    const { username, password } = req.body;
-    const user = users[username];
-
-    // Проверка пользователя
-    if (!user) {
-        return res.status(400).json({ message: 'Invalid username or password' });
+authRouter.post('/refreshToken', async (req: Request, res: Response):Promise<any> => {
+    try {
+        const { input } = req.body;
+        const user = await AuthRepository.login(input);
+        return new CommonResponse(user);
+    } catch (e) {
+        const err = e as Error;
+        return new ErrorResponse(err);
     }
+});
 
-    // Проверка пароля
-    const isValid = await bcrypt.compare(password, user.password);
-    if (!isValid) {
-        return res.status(400).json({ message: 'Invalid username or password' });
-    }
-
-    // Создание JWT токена
-    const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '1h' });
-
-    res.json({ token });
+authRouter.post('/logout', authenticate, async (req: Request, res: Response):Promise<any> => {
+    try {
+        const { ctx } = req.body;
+        await UserRepository.updateRefreshToken(BigInt(req.user.id), null);
+        return new CommonResponse(null);
+      } catch (e) {
+        const err = e as Error;
+        return new ErrorResponse(err);
+      }
 });
 
 export default authRouter;
