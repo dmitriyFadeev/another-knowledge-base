@@ -1,6 +1,6 @@
 import { bigserial, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
-const signEnum = pgEnum('topic_sign_enum', ['публичная', 'внутренняя']);
+export const signEnum = pgEnum('topic_sign_enum', ['публичная', 'внутренняя']);
 
 export const pgTopicsSchema = pgTable('topics', {
     topicId: bigserial('topic_id', { mode: 'bigint' }).primaryKey(),
@@ -8,5 +8,4 @@ export const pgTopicsSchema = pgTable('topics', {
     topicData: text('topic_data').notNull(),
     topicTags: text('topic_tags').array(),
     topicSign: signEnum('topic_sign'),
-    topicAdded: timestamp('topic_added').defaultNow(),
 });

@@ -1,8 +1,6 @@
-import { randomInt } from 'crypto';
 import db from '../../db';
-import { and, eq, sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { pgUsers } from '../drizzle/schema';
-import { env } from '../../env';
 import type {
   TCreateUser,
   TUserFull,
