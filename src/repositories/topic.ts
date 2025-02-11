@@ -1,8 +1,8 @@
-import db from '../../db';
+import db from '../db.js';
 import { eq } from 'drizzle-orm';
 
-import { pgTopics } from '../drizzle/schema';
-import { type TTopicFull, type TCreateTopic } from '../types/topic';
+import { pgTopics } from '../drizzle/schema.js';
+import { type TTopicFull, type TCreateTopic } from '../types/topic.js';
 
 export class TopicRepository {
   static async insertTopic(topic: TCreateTopic): Promise<TTopicFull> {

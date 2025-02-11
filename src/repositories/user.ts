@@ -1,13 +1,13 @@
-import db from '../../db';
+import db from '../db.js';
 import { eq, sql } from 'drizzle-orm';
-import { pgUsers } from '../drizzle/schema';
+import { pgUsers } from '../drizzle/schema.js';
 import type {
   TCreateUser,
   TUserFull,
   TUserFullWithToken,
   TUserInsertedDb,
   TUserWithRefreshToken,
-} from '../types/user';
+} from '../types/user.js';
 
 export class UserRepository {
   static async updateRefreshToken(

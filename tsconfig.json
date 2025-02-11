@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "module": "ES2020",
-    "moduleResolution": "bundler",
+    "module": "Node16",
+    "moduleResolution": "node16",
     "strict": true,
     "typeRoots": ["./src/@types", "./node_modules/@types"],
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "dist",
+    "outDir": "./dist",
+    "rootDir": "./src", 
     "resolveJsonModule": true
   },
   "include": ["src/**/*.ts"],

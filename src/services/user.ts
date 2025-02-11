@@ -1,7 +1,7 @@
-import { UserRepository } from "../repositories/user";
-import { TCreateUser, TUserFull, TUserWithTokens } from "../types/user";
-import { AuthRepository } from "./auth";
-import { CommonService } from "./common-service";
+import { UserRepository } from "../repositories/user.js";
+import { TCreateUser, TUserFull, TUserWithTokens } from "../types/user.js";
+import { AuthRepository } from "./auth.js";
+import { CommonService } from "./common-service.js";
 
 
 export class UserService {

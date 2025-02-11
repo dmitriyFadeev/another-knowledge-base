@@ -1,12 +1,12 @@
-import { UserSchema } from '../zod-schemas/user';
-import { StringSchema } from '../zod-schemas/common';
-import { authenticate } from '../middleware/auth';
-import { UserRepository } from '../repositories/user';
-import { CommonResponse } from '../responses/common';
-import { ErrorResponse } from '../responses/error';
+import { UserSchema } from '../zod-schemas/user.js';
+import { StringSchema } from '../zod-schemas/common.js';
+import { authenticate } from '../middleware/auth.js';
+import { UserRepository } from '../repositories/user.js';
+import { CommonResponse } from '../responses/common.js';
+import { ErrorResponse } from '../responses/error.js';
 import { Request, Response, Router } from 'express';
 import { ZodError } from 'zod'
-import { UserService } from '../services/user';
+import { UserService } from '../services/user.js';
 
 const userRouter = Router();
 

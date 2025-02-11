@@ -1,7 +1,7 @@
 import { createCipheriv, createDecipheriv } from 'crypto';
 import bcrypt from 'bcrypt';
 
-import { env } from '../../env';
+import { env } from '../env.js';
 
 export class CommonService {
   static async hashPassword(password: string) {

@@ -1,5 +1,5 @@
-import { TopicRepository } from "../repositories/topic";
-import { ETopicSign, TTopicFull, TTopicFullFilters, TTopicFullStr } from "../types/topic";
+import { TopicRepository } from "../repositories/topic.js";
+import { ETopicSign, TTopicFull, TTopicFullFilters, TTopicFullStr } from "../types/topic.js";
 
 export class TopicService {
     static async getTopics(tags: string[] | null, logged: boolean): Promise<TTopicFullFilters> {

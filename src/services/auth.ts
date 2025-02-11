@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 
-import { env } from '../../env';
-import type { TAuth, TLoginUser, TUserWithTokens } from '../types/user';
-import { CommonService } from './common-service';
-import { UserRepository } from '../repositories/user';
+import { env } from '../env.js';
+import type { TAuth, TLoginUser, TUserWithTokens } from '../types/user.js';
+import { CommonService } from './common-service.js';
+import { UserRepository } from '../repositories/user.js';
 
 export class AuthRepository {
   static generateTokens(id: string, email: string): TAuth {

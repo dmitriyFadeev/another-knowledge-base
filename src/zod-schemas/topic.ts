@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ETopicSign } from '../types/topic';
+import { ETopicSign } from '../types/topic.js';
 
 const SignEnum = z.nativeEnum(ETopicSign);
 type SignEnum = z.infer<typeof SignEnum>;

@@ -1,12 +1,12 @@
-import { TopicFilterSchema, TopicSchema } from '../zod-schemas/topic';
-import { StringSchema } from '../zod-schemas/common';
-import { authenticate, authenticateWithoutError } from '../middleware/auth';
-import { TopicRepository } from '../repositories/topic';
-import { CommonResponse } from '../responses/common';
-import { ErrorResponse } from '../responses/error';
+import { TopicFilterSchema, TopicSchema } from '../zod-schemas/topic.js';
+import { StringSchema } from '../zod-schemas/common.js';
+import { authenticate, authenticateWithoutError } from '../middleware/auth.js';
+import { TopicRepository } from '../repositories/topic.js';
+import { CommonResponse } from '../responses/common.js';
+import { ErrorResponse } from '../responses/error.js';
 import { Request, Response, Router } from 'express';
 import {ZodError} from 'zod'
-import { TopicService } from '../services/topic';
+import { TopicService } from '../services/topic.js';
 
 const topicRouter = Router();
 

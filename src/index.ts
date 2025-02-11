@@ -1,8 +1,8 @@
 import express from 'express';
-import { env } from '../env';
-import authRouter from './routers/auth';
-import topicRouter from './routers/topic';
-import userRouter from './routers/user';
+import { env } from './env.js';
+import authRouter from './routers/auth.js';
+import topicRouter from './routers/topic.js';
+import userRouter from './routers/user.js';
 
 const app = express();
 const PORT = env.PORT || 3000;

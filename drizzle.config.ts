@@ -1,6 +1,6 @@
 import { defineConfig } from 'drizzle-kit';
 
-import { env } from './env';
+import { env } from './src/env';
 
 const url = env.DB_URL;
 if (!url) throw new Error('No url provided');
