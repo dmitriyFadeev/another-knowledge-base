@@ -21,17 +21,19 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
 };
 
 export const authenticateWithoutError = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    if(!req.headers)
+        return next();
     const authHeader = req.headers.authorization;
     
     if (!authHeader) {
-        return req.user = null;
+        return next();
     }
 
     const token = authHeader.split(' ')[1];
 
     jwt.verify(token, env.JWT_SECRET, (err: any, user: any) => {
         if (err) {
-            return req.user = null;;
+            return next();
         }
         req.user = user;
         next();

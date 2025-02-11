@@ -5,7 +5,7 @@ import { AuthRepository } from '../services/auth';
 import { UserRepository } from '../repositories/user';
 import { authenticate } from '../middleware/auth';
 import { ZodError } from 'zod'
-import { AuthSchema, RefreshSchema } from '../zod/auth';
+import { AuthSchema, RefreshSchema } from '../zod-schemas/auth';
 
 const authRouter = Router();
 

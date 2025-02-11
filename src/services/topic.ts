@@ -1,5 +1,5 @@
 import { TopicRepository } from "../repositories/topic";
-import { ETopicSign, TTopicFullFilters, TTopicFullStr } from "../types/topic";
+import { ETopicSign, TTopicFull, TTopicFullFilters, TTopicFullStr } from "../types/topic";
 
 export class TopicService {
     static async getTopics(tags: string[] | null, logged: boolean): Promise<TTopicFullFilters> {
@@ -23,5 +23,12 @@ export class TopicService {
             topicId: el.topicId.toString()
           })) as TTopicFullStr[]
         }
+    }
+
+    static async getTopicById(id: string, logged: boolean): Promise<TTopicFull> {
+        const topic = await TopicRepository.getById(BigInt(id));
+        if(!logged && topic.topicSign == ETopicSign.private)
+            throw new Error('статья по id не найдена');
+        return topic
     }
 }

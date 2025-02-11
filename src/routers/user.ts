@@ -1,5 +1,5 @@
-import { UserSchema } from '../zod/user';
-import { StringSchema } from '../zod/common';
+import { UserSchema } from '../zod-schemas/user';
+import { StringSchema } from '../zod-schemas/common';
 import { authenticate } from '../middleware/auth';
 import { UserRepository } from '../repositories/user';
 import { CommonResponse } from '../responses/common';

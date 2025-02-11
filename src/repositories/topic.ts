@@ -1,8 +1,8 @@
 import db from '../../db';
-import { eq, sql } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 import { pgTopics } from '../drizzle/schema';
-import { type TTopicFull, type TCreateTopic, ETopicSign, TTopicFullFilters, TTopicFullStr } from '../types/topic';
+import { type TTopicFull, type TCreateTopic } from '../types/topic';
 
 export class TopicRepository {
   static async insertTopic(topic: TCreateTopic): Promise<TTopicFull> {
@@ -10,14 +10,14 @@ export class TopicRepository {
     return result[0] as TTopicFull;
   }
 
-  static async getTopicById(id: bigint): Promise<TTopicFull> {
+  static async getById(id: bigint): Promise<TTopicFull> {
     const result = await db
       .select()
       .from(pgTopics)
       .where(eq(pgTopics.topicId, id));
     const topic = result[0] as TTopicFull;
     if (!topic || !topic.topicId) {
-      throw new Error('статья по id не найден');
+      throw new Error('статья по id не найдена');
     }
     return topic;
   }
@@ -37,7 +37,7 @@ export class TopicRepository {
       .returning();
     const topic = result[0] as TTopicFull;
     if (!topic || !topic.topicId) {
-      throw new Error('статья по id не найден');
+      throw new Error('статья по id не найдена');
     }
     return topic;
   }
@@ -45,6 +45,6 @@ export class TopicRepository {
   static async deleteTopic(id: bigint): Promise<void> {
     const result = await db.delete(pgTopics).where(eq(pgTopics.topicId, id));
     if (!result)
-      throw new Error('статья по id не найден');
+      throw new Error('статья по id не найдена');
   }
 }

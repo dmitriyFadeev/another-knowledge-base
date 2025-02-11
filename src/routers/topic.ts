@@ -1,6 +1,6 @@
-import { TopicFilterSchema, TopicSchema } from '../zod/topic';
-import { StringSchema } from '../zod/common';
-import { authenticate } from '../middleware/auth';
+import { TopicFilterSchema, TopicSchema } from '../zod-schemas/topic';
+import { StringSchema } from '../zod-schemas/common';
+import { authenticate, authenticateWithoutError } from '../middleware/auth';
 import { TopicRepository } from '../repositories/topic';
 import { CommonResponse } from '../responses/common';
 import { ErrorResponse } from '../responses/error';
@@ -11,7 +11,7 @@ import { TopicService } from '../services/topic';
 const topicRouter = Router();
 
 
-topicRouter.get('/', authenticate, async (req: Request, res: Response):Promise<any> => {
+topicRouter.get('/', authenticateWithoutError, async (req: Request, res: Response):Promise<any> => {
     try {
         const topicTagsParam = req.query.topicTags as string;
         let topicTags = []
@@ -51,10 +51,11 @@ topicRouter.post('/', authenticate, async (req: Request, res: Response):Promise<
     }
 }),
 
-topicRouter.get('/:id', async (req: Request, res: Response):Promise<any> => {
+topicRouter.get('/:id', authenticateWithoutError, async (req: Request, res: Response):Promise<any> => {
     try {
         const id = StringSchema.parse(req.params.id);
-        const topic = await TopicRepository.getTopicById(BigInt(id));
+        const loggedIn = req.user ? true : false
+        const topic = await TopicService.getTopicById(id, loggedIn);
         return res.json(new CommonResponse({
             ...topic,
             topicId:topic.topicId.toString()
@@ -95,7 +96,7 @@ topicRouter.put('/:id', authenticate, async (req: Request, res: Response):Promis
 
 topicRouter.delete('/:id', authenticate, async (req: Request, res: Response):Promise<any> => {
     try {
-        const id = StringSchema.parse(req.params);
+        const id = StringSchema.parse(req.params.id);
         await TopicRepository.deleteTopic(BigInt(id));
         return res.json(new CommonResponse(true));
     } catch (e) {
