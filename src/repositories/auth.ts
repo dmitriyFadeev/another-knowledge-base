@@ -30,7 +30,6 @@ export class AuthRepository {
       foundUser.userId,
       CommonService.encrypt(tokens.refreshToken)
     );
-
     return {
       userId: foundUser.userId,
       accessToken: tokens.accessToken,

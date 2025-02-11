@@ -2,29 +2,46 @@ import { Router, Request, Response } from 'express';
 import { CommonResponse } from '../responses/common';
 import { ErrorResponse } from '../responses/error';
 import { AuthRepository } from '../repositories/auth';
-import { CommonService } from '../services/common-service';
 import { UserRepository } from '../repositories/user';
 import { authenticate } from '../middleware/auth';
+import {ZodError} from 'zod'
+import { AuthSchema, RefreshSchema } from '../zod/auth';
 
 const authRouter = Router();
 
 authRouter.post('/login', async (req: Request, res: Response):Promise<any> => {
     try {
-        const { input } = req.body;
+        const input = AuthSchema.parse(req.body);
         const user = await AuthRepository.login(input);
-        return new CommonResponse(user);
+        return res.json(new CommonResponse({
+            ...user,
+            userId:user.userId.toString()
+        }));
     } catch (e) {
+        if (e instanceof ZodError) {
+            let error = ''
+            e.errors.forEach(issue => error += issue.path.join('.') + ' ' + issue.message + ',');
+            return res.json(new ErrorResponse(new Error(error)));
+        }
         const err = e as Error;
-        return new ErrorResponse(err);
+        return res.json(new ErrorResponse(err));
     }
 });
 
 authRouter.post('/refreshToken', async (req: Request, res: Response):Promise<any> => {
     try {
-        const { input } = req.body;
-        const user = await AuthRepository.login(input);
-        return new CommonResponse(user);
+        const input = RefreshSchema.parse(req.body);
+        const user = await AuthRepository.refresh(input.userId,input.token);
+        return res.json(new CommonResponse({
+            ...user,
+            userId:user.userId.toString()
+        }));
     } catch (e) {
+        if (e instanceof ZodError) {
+            let error = ''
+            e.errors.forEach(issue => error += issue.path.join('.') + ' ' + issue.message + ',');
+            return res.json(new ErrorResponse(new Error(error)));
+        }
         const err = e as Error;
         return new ErrorResponse(err);
     }
@@ -32,12 +49,16 @@ authRouter.post('/refreshToken', async (req: Request, res: Response):Promise<any
 
 authRouter.post('/logout', authenticate, async (req: Request, res: Response):Promise<any> => {
     try {
-        const { ctx } = req.body;
         await UserRepository.updateRefreshToken(BigInt(req.user.id), null);
-        return new CommonResponse(null);
+        return res.json(new CommonResponse(true));
       } catch (e) {
+        if (e instanceof ZodError) {
+            let error = ''
+            e.errors.forEach(issue => error += issue.path.join('.') + ' ' + issue.message + ',');
+            return res.json(new ErrorResponse(new Error(error)));
+        }
         const err = e as Error;
-        return new ErrorResponse(err);
+        return res.json(new ErrorResponse(err));
       }
 });
 

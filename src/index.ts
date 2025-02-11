@@ -8,7 +8,7 @@ import userRouter from './routers/user';
 const app = express();
 const PORT = env.PORT || 3000;
 
-app.use(bodyParser.json());
+app.use(express.json());
 
 app.use('/auth', authRouter);
 app.use('/topics', topicRouter)

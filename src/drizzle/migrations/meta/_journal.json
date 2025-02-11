@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1739267975846,
+      "tag": "20250211095935_busy_dragon_lord",
+      "breakpoints": true
+    }
+  ]
+}

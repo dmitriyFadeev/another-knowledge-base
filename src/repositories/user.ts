@@ -33,22 +33,23 @@ export class UserRepository {
     };
   }
 
-  static async emailAlreadyExist(
+  static async checkAlreadyExist(
     email: string,
-    isReset?: boolean
+    login: string
   ): Promise<void> {
     let usersDb = [] as TUserFull[];
     usersDb = await db
       .select()
       .from(pgUsers)
-      .where(sql`LOWER(${pgUsers.userEmail}) = LOWER(${email})`);
+      .where(sql`LOWER(${pgUsers.userEmail}) = LOWER(${email}) OR LOWER(${pgUsers.userLogin}) = LOWER(${login})`);
     const user = usersDb[0] as TUserFull;
-    if (user && !isReset) {
-      throw new Error('пользователь с таким email уже есть');
+    if (user) {
+      throw new Error('пользователь с таким login или email уже есть');
     }
   }
 
   static async insertUser(user: TCreateUser): Promise<TUserWithTokens> {
+    await this.checkAlreadyExist(user.userEmail, user.userLogin)
     const userPassword = await CommonService.hashPassword(user.userPassword);
     const result = await db
       .insert(pgUsers)

@@ -5,66 +5,102 @@ import { authenticate } from '../middleware/auth';
 import { UserRepository } from '../repositories/user';
 import { CommonResponse } from '../responses/common';
 import { ErrorResponse } from '../responses/error';
-import { Request } from 'express';
+import { Request, Response } from 'express';
+import {ZodError} from 'zod'
 
 const userRouter = Router();
 
 
-userRouter.get('/', authenticate, async (req: Request):Promise<any> => {
+userRouter.get('/', authenticate, async (req: Request, res: Response):Promise<any> => {
     try {
         const users = await UserRepository.getUsers();
-        return new CommonResponse(users);
+        return res.json(new CommonResponse(users.map(el=>({
+            ...el,
+            userId:el.userId.toString() 
+        }))))
+
     } catch (e) {
+        if (e instanceof ZodError) {
+            let error = ''
+            e.errors.forEach(issue => error += issue.path.join('.') + ' ' + issue.message + ',');
+            return res.json(new ErrorResponse(new Error(error)));
+        }
         const err = e as Error;
-        return new ErrorResponse(err);
+        return res.json(new ErrorResponse(err));
     }
 }),
 
-userRouter.post('/', authenticate, async (req: Request):Promise<any> => {
+userRouter.post('/', async (req: Request, res: Response):Promise<any> => {
     try {
         const parseResult = UserSchema.parse(req.body);
         const user = await UserRepository.insertUser(parseResult);
-        return new CommonResponse(user);
+        return res.json(new CommonResponse({
+            ...user,
+            userId:user.userId.toString()
+        }));
     } catch (e) {
-      const err = e as Error;
-      return new ErrorResponse(err);
+        if (e instanceof ZodError) {
+            let error = ''
+            e.errors.forEach(issue => error += issue.path.join('.') + ' ' + issue.message + ',');
+            return res.json(new ErrorResponse(new Error(error)));
+        }
+        const err = e as Error;
+        return res.json(new ErrorResponse(err));
     }
   }),
 
-userRouter.get('/:id', authenticate, async (req: Request):Promise<any> => {
+userRouter.get('/:id', authenticate, async (req: Request, res: Response):Promise<any> => {
     try {
         const id = StringSchema.parse(req.params);
         const user = await UserRepository.getUserById(BigInt(id));
-        return new CommonResponse(user);
+        return res.json(new CommonResponse({
+            ...user,
+            userId:user.userId.toString()
+        }));
     } catch (e) {
+        if (e instanceof ZodError) {
+            let error = ''
+            e.errors.forEach(issue => error += issue.path.join('.') + ' ' + issue.message + ',');
+            return res.json(new ErrorResponse(new Error(error)));
+        }
         const err = e as Error;
-        return new ErrorResponse(err);
+        return res.json(new ErrorResponse(err));
     }
 }),
 
-userRouter.put('/:id', authenticate, async (req: Request):Promise<any> => {
+userRouter.put('/:id', authenticate, async (req: Request, res: Response):Promise<any> => {
     try {
         const id = StringSchema.parse(req.params);
         const parseResult = UserSchema.parse(req.body);
-        const user = await UserRepository.updateUser({
+        const userId = await UserRepository.updateUser({
             ...parseResult,
             userId: BigInt(id),
         });
-        return new CommonResponse(user);
+        return res.json(new CommonResponse(userId.toString()));
     } catch (e) {
+        if (e instanceof ZodError) {
+            let error = ''
+            e.errors.forEach(issue => error += issue.path.join('.') + ' ' + issue.message + ',');
+            return res.json(new ErrorResponse(new Error(error)));
+        }
         const err = e as Error;
-        return new ErrorResponse(err);
+        return res.json(new ErrorResponse(err));
     }
 }),
 
-userRouter.delete('/:id', authenticate, async (req: Request):Promise<any> => {
+userRouter.delete('/:id', authenticate, async (req: Request, res: Response):Promise<any> => {
     try {
         const id = StringSchema.parse(req.params);
         await UserRepository.deleteUser(BigInt(id));
-        return new CommonResponse(null);
+        return res.json(new CommonResponse(true));
     } catch (e) {
+        if (e instanceof ZodError) {
+            let error = ''
+            e.errors.forEach(issue => error += issue.path.join('.') + ' ' + issue.message + ',');
+            return res.json(new ErrorResponse(new Error(error)));
+        }
         const err = e as Error;
-        return new ErrorResponse(err);
+        return res.json(new ErrorResponse(err));
     }
 })
 

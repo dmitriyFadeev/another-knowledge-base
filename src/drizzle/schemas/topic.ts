@@ -7,5 +7,5 @@ export const pgTopicsSchema = pgTable('topics', {
     topicTitle: text('topic_title').notNull(),
     topicData: text('topic_data').notNull(),
     topicTags: text('topic_tags').array(),
-    topicSign: signEnum('topic_sign'),
+    topicSign: text('topic_sign'),
 });

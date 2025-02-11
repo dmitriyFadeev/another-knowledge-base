@@ -1,3 +1,4 @@
+
 export class ErrorResponse {
   constructor(error: Error) {
     this.success = false;
