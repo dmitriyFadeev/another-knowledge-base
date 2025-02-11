@@ -49,7 +49,8 @@ authRouter.post('/refreshToken', async (req: Request, res: Response):Promise<any
 
 authRouter.post('/logout', authenticate, async (req: Request, res: Response):Promise<any> => {
     try {
-        await UserRepository.updateRefreshToken(BigInt(req.user.id), null);
+        if(req.user)
+            await UserRepository.updateRefreshToken(BigInt(req.user.id), null);
         return res.json(new CommonResponse(true));
       } catch (e) {
         if (e instanceof ZodError) {

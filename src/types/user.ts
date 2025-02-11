@@ -40,3 +40,10 @@ export type TUserFull = TCreateUser & {
     userLogin: string;
     userId: bigint;
   };
+
+  export type TUser = {
+    id: string,
+    email: string,
+    iat: number,
+    exp: number
+  }

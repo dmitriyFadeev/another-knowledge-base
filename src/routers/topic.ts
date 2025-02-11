@@ -73,6 +73,7 @@ topicRouter.get('/:id', authenticateWithoutError, async (req: Request, res: Resp
 
 topicRouter.put('/:id', authenticate, async (req: Request, res: Response):Promise<any> => {
     try {
+        console.log(req.user)
         const id = StringSchema.parse(req.params.id);
         const parseResult = TopicSchema.parse(req.body);
         const topic = await TopicRepository.updateTopic({
