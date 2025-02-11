@@ -5,11 +5,9 @@ import type {
   TCreateUser,
   TUserFull,
   TUserFullWithToken,
+  TUserInsertedDb,
   TUserWithRefreshToken,
-  TUserWithTokens,
 } from '../types/user';
-import { CommonService } from '../services/common-service';
-import { AuthRepository } from './auth';
 
 export class UserRepository {
   static async updateRefreshToken(
@@ -46,31 +44,13 @@ export class UserRepository {
     }
   }
 
-  static async insertUser(user: TCreateUser): Promise<TUserWithTokens> {
-    await this.checkAlreadyExist(user.userEmail, user.userLogin)
-    const userPassword = await CommonService.hashPassword(user.userPassword);
+  static async insert(user: TCreateUser): Promise<TUserInsertedDb> {
     const result = await db
       .insert(pgUsers)
-      .values({
-        ...user,
-        userPassword,
-      })
+      .values(user)
       .returning();
     const createdUser = result[0];
-    const tokens = AuthRepository.generateTokens(
-      createdUser.userId.toString(),
-      createdUser.userEmail
-    );
-    const updatedUser = await this.updateRefreshToken(
-      createdUser.userId,
-      CommonService.encrypt(tokens.refreshToken)
-    );
-
-    return {
-      userId: updatedUser.userId,
-      refreshToken: updatedUser.refreshToken,
-      accessToken: tokens.accessToken,
-    };
+    return createdUser
   }
 
   static async getUserById(id: bigint): Promise<TUserFull> {
@@ -116,7 +96,7 @@ export class UserRepository {
       .where(eq(pgUsers.userLogin, login));
     const user = result[0] as TUserFull;
     if (!user || !user.userId) {
-      throw new Error('пользователь по кампании не найден');
+      throw new Error('пользователь по login не найден');
     }
     return user;
   }
@@ -127,20 +107,16 @@ export class UserRepository {
     return users;
   }
 
-  static async updateUser(updatedUser: TUserFull): Promise<bigint> {
-    await this.checkAlreadyExist(updatedUser.userEmail, updatedUser.userLogin)
-    const userPassword = await CommonService.hashPassword(updatedUser.userPassword);
+  static async update(updatedUser: TUserFull): Promise<bigint> {
     const result = await db
       .update(pgUsers)
-      .set({
-        ...updatedUser,
-        userPassword
-      })
+      .set(updatedUser,
+        )
       .where(eq(pgUsers.userId, updatedUser.userId))
       .returning();
     const user = result[0] as TUserFull;
     if (!user || !user.userId) {
-      throw new Error('пользователь по почте не найден');
+      throw new Error('пользователь по id не найден');
     }
     return user.userId;
   }

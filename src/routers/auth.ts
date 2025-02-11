@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { CommonResponse } from '../responses/common';
 import { ErrorResponse } from '../responses/error';
-import { AuthRepository } from '../repositories/auth';
+import { AuthRepository } from '../services/auth';
 import { UserRepository } from '../repositories/user';
 import { authenticate } from '../middleware/auth';
 import { ZodError } from 'zod'

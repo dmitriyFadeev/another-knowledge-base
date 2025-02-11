@@ -6,6 +6,7 @@ import { CommonResponse } from '../responses/common';
 import { ErrorResponse } from '../responses/error';
 import { Request, Response, Router } from 'express';
 import {ZodError} from 'zod'
+import { TopicService } from '../services/topic';
 
 const topicRouter = Router();
 
@@ -18,7 +19,7 @@ topicRouter.get('/', authenticate, async (req: Request, res: Response):Promise<a
             topicTags = JSON.parse(topicTagsParam)
         const data = TopicFilterSchema.parse(topicTags)
         const loggedIn = req.user ? true : false
-        const topics = await TopicRepository.getTopics(data, loggedIn);
+        const topics = await TopicService.getTopics(data, loggedIn);
         return res.json(new CommonResponse(topics))
     } catch (e) {
         if (e instanceof ZodError) {

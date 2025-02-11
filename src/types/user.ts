@@ -33,4 +33,10 @@ export type TUserFull = TCreateUser & {
     accessToken: string;
     refreshToken: string;
   };
-  
+
+  export type TUserInsertedDb = {
+    userPassword: string;
+    userEmail: string;
+    userLogin: string;
+    userId: bigint;
+  };

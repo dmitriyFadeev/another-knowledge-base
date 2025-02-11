@@ -5,7 +5,8 @@ import { UserRepository } from '../repositories/user';
 import { CommonResponse } from '../responses/common';
 import { ErrorResponse } from '../responses/error';
 import { Request, Response, Router } from 'express';
-import {ZodError} from 'zod'
+import { ZodError } from 'zod'
+import { UserService } from '../services/user';
 
 const userRouter = Router();
 
@@ -32,7 +33,7 @@ userRouter.get('/', authenticate, async (req: Request, res: Response):Promise<an
 userRouter.post('/', async (req: Request, res: Response):Promise<any> => {
     try {
         const parseResult = UserSchema.parse(req.body);
-        const user = await UserRepository.insertUser(parseResult);
+        const user = await UserService.insertUser(parseResult);
         return res.json(new CommonResponse({
             ...user,
             userId:user.userId.toString()
@@ -71,7 +72,7 @@ userRouter.put('/:id', authenticate, async (req: Request, res: Response):Promise
     try {
         const id = StringSchema.parse(req.params.id);
         const parseResult = UserSchema.parse(req.body);
-        const userId = await UserRepository.updateUser({
+        const userId = await UserService.updateUser({
             ...parseResult,
             userId: BigInt(id),
         });
