@@ -7,6 +7,8 @@ type SignEnum = z.infer<typeof SignEnum>;
 export const TopicSchema = z.object({
     topicTitle: z.string(),
     topicData: z.string(),
-    topicTags: z.string().array().nullable(),
+    topicTags: z.string().array(),
     topicSign: SignEnum.nullable(),
 });
+
+export const TopicFilterSchema = z.string().array().nullable()

@@ -1,5 +1,5 @@
 {
-  "id": "c987ada9-ab1d-4a64-ba4f-31521da57f87",
+  "id": "b1aa4cd3-4253-4d81-a484-4806baa41fe9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -30,7 +30,7 @@
           "name": "topic_tags",
           "type": "text[]",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "topic_sign": {
           "name": "topic_sign",

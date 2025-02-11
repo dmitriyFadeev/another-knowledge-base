@@ -16,13 +16,11 @@ export class UserRepository {
     id: bigint,
     token: string | null
   ): Promise<TUserWithRefreshToken> {
-    let userRefreshToken = null;
-    if (token) userRefreshToken = await CommonService.hashPassword(token);
 
     const result = await db
       .update(pgUsers)
       .set({
-        userRefreshToken,
+        userRefreshToken: token,
       })
       .where(eq(pgUsers.userId, id))
       .returning();
@@ -130,6 +128,7 @@ export class UserRepository {
   }
 
   static async updateUser(updatedUser: TUserFull): Promise<bigint> {
+    await this.checkAlreadyExist(updatedUser.userEmail, updatedUser.userLogin)
     const userPassword = await CommonService.hashPassword(updatedUser.userPassword);
     const result = await db
       .update(pgUsers)

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { TopicSchema } from '../zod/topic';
+import { TopicFilterSchema, TopicSchema } from '../zod/topic';
 import { StringSchema } from '../zod/common';
 import { authenticate } from '../middleware/auth';
 import { TopicRepository } from '../repositories/topic';
@@ -13,11 +13,14 @@ const topicRouter = Router();
 
 topicRouter.get('/', authenticate, async (req: Request, res: Response):Promise<any> => {
     try {
-        const topics = await TopicRepository.getTopics();
-        return res.json(new CommonResponse(topics.map(el=>({
-            ...el,
-            topicId:el.topicId
-        }))))
+        const topicTagsParam = req.query.topicTags as string;
+        let topicTags = []
+        if(topicTagsParam)
+            topicTags = JSON.parse(topicTagsParam)
+        const data = TopicFilterSchema.parse(topicTags)
+        const loggedIn = req.user ? true : false
+        const topics = await TopicRepository.getTopics(data, loggedIn);
+        return res.json(new CommonResponse(topics))
     } catch (e) {
         if (e instanceof ZodError) {
             let error = ''
@@ -35,7 +38,7 @@ topicRouter.post('/', authenticate, async (req: Request, res: Response):Promise<
         const topic = await TopicRepository.insertTopic(parseResult);
         return res.json(new CommonResponse({
             ...topic,
-            topicId:topic.topicId
+            topicId:topic.topicId.toString()
         }));
     } catch (e) {
         if (e instanceof ZodError) {
@@ -48,13 +51,13 @@ topicRouter.post('/', authenticate, async (req: Request, res: Response):Promise<
     }
 }),
 
-topicRouter.get('/:id', authenticate, async (req: Request, res: Response):Promise<any> => {
+topicRouter.get('/:id', async (req: Request, res: Response):Promise<any> => {
     try {
-        const id = StringSchema.parse(req.params);
+        const id = StringSchema.parse(req.params.id);
         const topic = await TopicRepository.getTopicById(BigInt(id));
         return res.json(new CommonResponse({
             ...topic,
-            topicId:topic.topicId
+            topicId:topic.topicId.toString()
         }));
     } catch (e) {
         if (e instanceof ZodError) {
@@ -69,7 +72,7 @@ topicRouter.get('/:id', authenticate, async (req: Request, res: Response):Promis
 
 topicRouter.put('/:id', authenticate, async (req: Request, res: Response):Promise<any> => {
     try {
-        const id = StringSchema.parse(req.params);
+        const id = StringSchema.parse(req.params.id);
         const parseResult = TopicSchema.parse(req.body);
         const topic = await TopicRepository.updateTopic({
             ...parseResult,
@@ -77,7 +80,7 @@ topicRouter.put('/:id', authenticate, async (req: Request, res: Response):Promis
         });
         return res.json(new CommonResponse({
             ...topic,
-            topicId:topic.topicId
+            topicId:topic.topicId.toString()
         }));
     } catch (e) {
         if (e instanceof ZodError) {

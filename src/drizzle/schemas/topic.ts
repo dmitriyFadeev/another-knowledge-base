@@ -6,6 +6,6 @@ export const pgTopicsSchema = pgTable('topics', {
     topicId: bigserial('topic_id', { mode: 'bigint' }).primaryKey(),
     topicTitle: text('topic_title').notNull(),
     topicData: text('topic_data').notNull(),
-    topicTags: text('topic_tags').array(),
+    topicTags: text('topic_tags').array().notNull(),
     topicSign: text('topic_sign'),
 });

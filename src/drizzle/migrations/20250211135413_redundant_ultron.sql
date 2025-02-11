@@ -2,7 +2,7 @@ CREATE TABLE "topics" (
 	"topic_id" bigserial PRIMARY KEY NOT NULL,
 	"topic_title" text NOT NULL,
 	"topic_data" text NOT NULL,
-	"topic_tags" text[],
+	"topic_tags" text[] NOT NULL,
 	"topic_sign" text
 );
 --> statement-breakpoint

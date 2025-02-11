@@ -4,7 +4,7 @@ import { ErrorResponse } from '../responses/error';
 import { AuthRepository } from '../repositories/auth';
 import { UserRepository } from '../repositories/user';
 import { authenticate } from '../middleware/auth';
-import {ZodError} from 'zod'
+import { ZodError } from 'zod'
 import { AuthSchema, RefreshSchema } from '../zod/auth';
 
 const authRouter = Router();
@@ -43,7 +43,7 @@ authRouter.post('/refreshToken', async (req: Request, res: Response):Promise<any
             return res.json(new ErrorResponse(new Error(error)));
         }
         const err = e as Error;
-        return new ErrorResponse(err);
+        return res.json(new ErrorResponse(err));
     }
 });
 

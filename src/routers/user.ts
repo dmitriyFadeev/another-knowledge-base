@@ -51,7 +51,7 @@ userRouter.post('/', async (req: Request, res: Response):Promise<any> => {
 
 userRouter.get('/:id', authenticate, async (req: Request, res: Response):Promise<any> => {
     try {
-        const id = StringSchema.parse(req.params);
+        const id = StringSchema.parse(req.params.id);
         const user = await UserRepository.getUserById(BigInt(id));
         return res.json(new CommonResponse({
             ...user,
@@ -70,7 +70,7 @@ userRouter.get('/:id', authenticate, async (req: Request, res: Response):Promise
 
 userRouter.put('/:id', authenticate, async (req: Request, res: Response):Promise<any> => {
     try {
-        const id = StringSchema.parse(req.params);
+        const id = StringSchema.parse(req.params.id);
         const parseResult = UserSchema.parse(req.body);
         const userId = await UserRepository.updateUser({
             ...parseResult,
@@ -90,7 +90,7 @@ userRouter.put('/:id', authenticate, async (req: Request, res: Response):Promise
 
 userRouter.delete('/:id', authenticate, async (req: Request, res: Response):Promise<any> => {
     try {
-        const id = StringSchema.parse(req.params);
+        const id = StringSchema.parse(req.params.id);
         await UserRepository.deleteUser(BigInt(id));
         return res.json(new CommonResponse(true));
     } catch (e) {

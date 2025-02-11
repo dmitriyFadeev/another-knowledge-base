@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-
-const SECRET_KEY = 'your_secret_key';
+import { env } from '../../env';
 
 export const authenticate = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     const authHeader = req.headers.authorization;
@@ -12,9 +11,27 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
 
     const token = authHeader.split(' ')[1];
 
-    jwt.verify(token, SECRET_KEY, (err: any, user: any) => {
+    jwt.verify(token, env.JWT_SECRET, (err: any, user: any) => {
         if (err) {
             return res.status(403).json({ message: 'Invalid token' });
+        }
+        req.user = user;
+        next();
+    });
+};
+
+export const authenticateWithoutError = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        return req.user = null;
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    jwt.verify(token, env.JWT_SECRET, (err: any, user: any) => {
+        if (err) {
+            return req.user = null;;
         }
         req.user = user;
         next();
