@@ -1,5 +1,5 @@
 # another-knowledge-base
-создание дист папки командой npm run dist
+создание dist папки командой npm run dist
 создание миграционного файла относительно схем pg команда npm run db:generate
 применение миграций к бд команда npm run db:migrate
 запуск express сервера команда npm run start
