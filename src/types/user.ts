@@ -1,7 +1,7 @@
 export type TUserFull = TCreateUser & {
     userId: bigint;
   };
-  
+
   export type TUserFullWithToken = TUserFull & {
     userRefreshToken: string;
   };
@@ -40,10 +40,3 @@ export type TUserFull = TCreateUser & {
     userLogin: string;
     userId: bigint;
   };
-
-  export type TUser = {
-    id: string,
-    email: string,
-    iat: number,
-    exp: number
-  }
