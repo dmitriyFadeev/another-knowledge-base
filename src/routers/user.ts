@@ -1,11 +1,10 @@
-import { Router } from 'express';
 import { UserSchema } from '../zod/user';
 import { StringSchema } from '../zod/common';
 import { authenticate } from '../middleware/auth';
 import { UserRepository } from '../repositories/user';
 import { CommonResponse } from '../responses/common';
 import { ErrorResponse } from '../responses/error';
-import { Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import {ZodError} from 'zod'
 
 const userRouter = Router();

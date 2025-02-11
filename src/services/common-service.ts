@@ -2,7 +2,6 @@ import { createCipheriv, createDecipheriv } from 'crypto';
 import bcrypt from 'bcrypt';
 
 import { env } from '../../env';
-import { ZodError } from 'zod';
 
 export class CommonService {
   static async hashPassword(password: string) {

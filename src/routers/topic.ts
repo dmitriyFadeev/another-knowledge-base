@@ -1,11 +1,10 @@
-import { Router } from 'express';
 import { TopicFilterSchema, TopicSchema } from '../zod/topic';
 import { StringSchema } from '../zod/common';
 import { authenticate } from '../middleware/auth';
 import { TopicRepository } from '../repositories/topic';
 import { CommonResponse } from '../responses/common';
 import { ErrorResponse } from '../responses/error';
-import { Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import {ZodError} from 'zod'
 
 const topicRouter = Router();
