@@ -42,12 +42,14 @@ export class AuthRepository {
     token: string
   ): Promise<TUserWithTokens> {
     const foundUser = await UserRepository.getUserByIdWithToken(BigInt(userId));
-    const JWT_SECRET = env.JWT_SECRET;
-    jwt.verify(token, JWT_SECRET);
+    jwt.verify(token, env.JWT_SECRET);
+    if(token != CommonService.decrypt(foundUser.userRefreshToken) )
+      throw new Error('invalid token')
     const tokens = this.generateTokens(
       foundUser.userId.toString(),
       foundUser.userEmail
     );
+    
     await UserRepository.updateRefreshToken(
       foundUser.userId,
       CommonService.encrypt(tokens.refreshToken)

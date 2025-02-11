@@ -31,7 +31,7 @@ authRouter.post('/login', async (req: Request, res: Response):Promise<any> => {
 authRouter.post('/refreshToken', async (req: Request, res: Response):Promise<any> => {
     try {
         const input = RefreshSchema.parse(req.body);
-        const user = await AuthRepository.refresh(input.userId,input.token);
+        const user = await AuthRepository.refresh(input.userId,input.token.split(' ')[1]);
         return res.json(new CommonResponse({
             ...user,
             userId:user.userId.toString()
